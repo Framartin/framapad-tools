@@ -1,12 +1,16 @@
 #!/bin/bash
 
 ##############################################################################################
-#     This script retreive all lite framapad from your Firefox's history and bookmarks,      #
+#     This script retrieve all lite framapad from your Firefox's history and bookmarks,      #
 #                       and download them in txt to have local backup                        #
 ##############################################################################################
 # by Framartin
 
-# Install sqlite3 before exectuting this script : sudo apt-get install sqlite3
+if ! type sqlite3 > /dev/null; then
+    echo "Vous devez installer sqlite3 avant d'exécuter ce script. "
+    echo "Par ex: apt-get install sqlite3"
+    exit
+fi
 
 cd ~/.mozilla/firefox/*.default # TODO : add profiles support ?
 sqlite3 places.sqlite 'SELECT DISTINCT url FROM moz_places WHERE url LIKE "%lite%framapad.org/p/%" AND url NOT LIKE "%/timeslider%" AND url NOT LIKE "%/";' > /tmp/list_framapad.txt
