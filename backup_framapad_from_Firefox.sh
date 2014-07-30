@@ -9,7 +9,7 @@
 # Install sqlite3 before exectuting this script : sudo apt-get install sqlite3
 
 cd ~/.mozilla/firefox/*.default # TODO : add profiles support ?
-sqlite3 places.sqlite 'SELECT url FROM moz_places WHERE url LIKE "%lite%framapad.org/p/%" AND url NOT LIKE "%/timeslider%" AND url NOT LIKE "%/";' > /tmp/list_framapad.txt
+sqlite3 places.sqlite 'SELECT DISTINCT url FROM moz_places WHERE url LIKE "%lite%framapad.org/p/%" AND url NOT LIKE "%/timeslider%" AND url NOT LIKE "%/";' > /tmp/list_framapad.txt
 if [ ! -d ~/Sauvegardes/lite.framapad.org ] ; then
    mkdir -p ~/Sauvegardes/lite.framapad.org
 fi
