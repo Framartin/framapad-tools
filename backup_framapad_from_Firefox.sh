@@ -2,7 +2,7 @@
 
 ##############################################################################################
 #     This script retrieve all lite framapad from your Firefox's history and bookmarks,      #
-#                       and download them in txt to have local backup                        #
+#            and Chromium history, and download them in txt to have local backup             #
 ##############################################################################################
 # by Framartin
 
@@ -12,8 +12,22 @@ if ! type sqlite3 > /dev/null; then
     exit
 fi
 
-cd ~/.mozilla/firefox/*.default # TODO : add profiles support ?
-sqlite3 places.sqlite 'SELECT DISTINCT url FROM moz_places WHERE url LIKE "%lite%framapad.org/p/%" AND url NOT LIKE "%/timeslider%" AND url NOT LIKE "%/";' > /tmp/list_framapad.txt
+if [ -f /tmp/list_framapad.txt ] ; then
+   rm /tmp/list_framapad.txt
+fi
+
+if [ -d ~/.mozilla ] ; then
+   cd ~/.mozilla/firefox/*.default # TODO : add profiles support ?
+   sqlite3 places.sqlite 'SELECT DISTINCT url FROM moz_places WHERE url LIKE "%lite%framapad.org/p/%" AND url NOT LIKE "%/timeslider%" AND url NOT LIKE "%/";' >> /tmp/list_framapad.txt
+fi
+
+if [ -d ~/.config/chromium ] ; then
+   cd ~/.config/chromium/Default # TODO : add profiles support ?
+   sqlite3 History 'SELECT DISTINCT url FROM urls WHERE url LIKE "%lite%framapad.org/p/%" AND url NOT LIKE "%/timeslider%" AND url NOT LIKE "%/";' >> /tmp/list_framapad.txt
+fi
+
+cat /tmp/list_framapad.txt | sort -u > /tmp/list_framapad_ok.txt   # delete duplicate urls
+
 if [ ! -d ~/Sauvegardes/lite.framapad.org ] ; then
    mkdir -p ~/Sauvegardes/lite.framapad.org
 fi
@@ -27,7 +41,7 @@ do
    nameFile=${nameFile/"https://"/backup.}
    line+="/export/txt"
    wget --quiet --no-check-certificate $line -O $nameFile.txt
-done < /tmp/list_framapad.txt
+done < /tmp/list_framapad_ok.txt
 echo "Framapads lite visités via Firefox sauvergardés dans ~/Sauvegardes/lite.framapad.org !"
 
-# other solution : retreive from bookmarks backups in ~/.mozilla/firefox/*.default/bookmarkbackups/
+# other solution for Firefox : retreive from bookmarks backups in ~/.mozilla/firefox/*.default/bookmarkbackups/
