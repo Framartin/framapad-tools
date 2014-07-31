@@ -42,6 +42,6 @@ do
    line+="/export/txt"
    wget --quiet --no-check-certificate $line -O $nameFile.txt
 done < /tmp/list_framapad_ok.txt
-echo "Framapads lite visités via Firefox sauvergardés dans ~/Sauvegardes/lite.framapad.org !"
+echo "Framapads lite visités via Firefox et Chromium sauvergardés dans ~/Sauvegardes/lite.framapad.org !"
 
 # other solution for Firefox : retreive from bookmarks backups in ~/.mozilla/firefox/*.default/bookmarkbackups/
